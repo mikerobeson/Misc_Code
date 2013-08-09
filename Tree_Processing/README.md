@@ -22,7 +22,7 @@ scripts to sanity-check my Bacteria phylogeny and root the tree to Archaea based
 on the taxonomy information added to the tips of the tree.
 
 1) Use the script map_taxon_labels_to_tree.py to appended the taxonomic informaton to
-   the tips of the tree using appropriate files generated via QIIME. a couple of these
+   the tips of the tree using appropriate files generated via QIIME. A couple of these
    QIIME scripts are referred to below.
 
             python map_taxon_labels_to_tree.py  tree.infile  taxonomy.infile  tree.outfile  taxonomy.depth
