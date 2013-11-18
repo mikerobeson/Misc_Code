@@ -39,7 +39,7 @@ def assign_tax_labels_to_tree(tree,std):
     """
     tree_nodes = DndParser(tree, PhyloNode)
     for node in tree_nodes.tips():
-        label = node.Name
+        label = node.Name.strip('\'') #incase there are actual quotes
         tax = std[label]
         new_label = str(label) + '_' + tax
         node.Name = new_label 
