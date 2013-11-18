@@ -62,7 +62,7 @@ if __name__ == '__main__':
     else:
         intree = open(argv[1],'U').read()
         outtree = argv[2]
-        regex_string = int(argv[3])
+        regex_string = str(argv[3])
         main(intree, outtree, regex_string)
         
 
