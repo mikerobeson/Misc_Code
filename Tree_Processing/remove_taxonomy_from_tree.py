@@ -15,7 +15,7 @@ def remove_taxonomy(tree, regex_string):
     """
     tree_nodes = DndParser(tree, PhyloNode)
     for node in tree_nodes.tips():
-        label = node.Name
+        label = node.Name.strip('\'') # incase there are actual quotes
         p = re.compile(regex_string)
         new_label = p.sub('', label)
         #print new_label
