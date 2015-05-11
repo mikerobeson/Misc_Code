@@ -27,7 +27,7 @@ His notes are contained within [Silva_119_provisional_release.zip](http://www.ar
     This step is just to make sure the input files are sane for the following steps.
 
 3) Generate a full taxonomy and raw fasta file from the raw sequence data:
-
+    
     `python prep_silva_data.py <silva.fasta> <taxonomy.outfile.txt> <sequence.outfile.fasta>`
 
 4) Remove any non-ASCII characters from the newly created taxonomy file using the script
@@ -35,7 +35,7 @@ His notes are contained within [Silva_119_provisional_release.zip](http://www.ar
     These characters can cause the RDP classifier and other programs to fail.
 
 5) Take the corrected taxonomy file and make it RDP friendly:
-
+    
     `python prep_silva_taxonomy_file.py <taxonomy.outfile.txt> <taxonomy.rdp.outfile.txt>`
     
     As there can be many more than 7-levels of taxonomy (see below), you can change the 
