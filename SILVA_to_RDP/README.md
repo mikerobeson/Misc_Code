@@ -106,13 +106,15 @@ The following procedures below should work identically.
 
 
 ```
-    Otherwise If you just run
-    `python prep_silva_data.py <silva.fasta> <taxonomy.outfile.txt> <sequence.outfile.fasta>`
-    `python prep_silva_taxonomy_file.py <taxonomy.outfile.txt> <taxonomy.rdp.outfile.txt>`
+    Otherwise If you just run:
+    python prep_silva_data.py <silva.fasta> <taxonomy.outfile.txt> <sequence.outfile.fasta>
+    python prep_silva_taxonomy_file.py <taxonomy.outfile.txt> <taxonomy.rdp.outfile.txt>
 
-    Now you have two file that can be use to train your classifier or use for BLAST:
+    You'll have two file that can be use to train your classifier or use for BLAST.
     RDP friendly taxonomy:                      <taxonomy.rdp.outfile.txt>
     FASTA file with only Accession headers:     <sequence.outfile.fasta>
+    
+    Obvuosly, keeping in mind any minor file edits as needed. See above Procedures.
 ```
 
 
