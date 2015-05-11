@@ -18,6 +18,7 @@ reference database for [QIIME](http://qiime.org). I've updated the documentation
 reflect a more streamlined approach as suggested by [@walterst](https://gist.github.com/walterst). 
 His notes are contained within [Silva_119_provisional_release.zip](http://www.arb-silva.de/fileadmin/silva_databases/qiime/Silva_119_provisional_release.zip).
 
+The following procedures below should work identically.
 
 ## Procedure 1
 1) Download either an ungapped or ungapped SILVA fasta file of choice from [here](http://www.arb-silva.de/download/archive/).
@@ -44,8 +45,8 @@ His notes are contained within [Silva_119_provisional_release.zip](http://www.ar
     well as my [trick](https://groups.google.com/d/msg/qiime-forum/KEvXuLwJB70/LEaY4N9JXucJ) on how to quickly make 
     a representative sequence file based on the SILVA aligned fasta files.
 
-7) Remove the OTU ID labels so that the FASTA IDs match the taxonomy file IDs. 
-    Use the script [fix_fasta_labels.py](https://gist.github.com/walterst/f5c619799e6dc1f575a0) from [@walterst](https://gist.github.com/walterst) on your OTU FASTA file
+7) Remove the OTU ID labels from the OTU FASTA (representative sequence) headers so that 
+    they match the taxonomy file IDs from Step 3. Use the script [fix_fasta_labels.py](https://gist.github.com/walterst/f5c619799e6dc1f575a0) from [@walterst](https://gist.github.com/walterst) on your OTU FASTA file
     so that they match the actual representative sequence ID in the SILVA database (e.g. remove the OTU ID label).
     Now you can use the unaligned OTU FASTA files and the taxonomy file for [assign_taxonomy.py](http://qiime.org/scripts/assign_taxonomy.html)
 
@@ -105,6 +106,10 @@ His notes are contained within [Silva_119_provisional_release.zip](http://www.ar
 
 
 ```
+    Otherwise If you just run
+    `python prep_silva_data.py <silva.fasta> <taxonomy.outfile.txt> <sequence.outfile.fasta>`
+    `python prep_silva_taxonomy_file.py <taxonomy.outfile.txt> <taxonomy.rdp.outfile.txt>`
+
     Now you have two file that can be use to train your classifier or use for BLAST:
     RDP friendly taxonomy:                      <taxonomy.rdp.outfile.txt>
     FASTA file with only Accession headers:     <sequence.outfile.fasta>
