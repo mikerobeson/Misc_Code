@@ -40,11 +40,12 @@ His notes are contained within [Silva_119_provisional_release.zip](http://www.ar
     can add these lines to the qiime_config file: `summarize_taxa:level	2,3,4,5,6,7,8,9,10,11`. 
     This is beneficial when using [summarize_taxa_through_plots.py](http://qiime.org/scripts/summarize_taxa_through_plots.html)
 
-6) Pick OTUs for 99%, 97%, 94%. Do this on the unaligned SILVA data. See this [thread](https://groups.google.com/d/msg/qiime-forum/KEvXuLwJB70/FK7h2e_gjjIJ) as 
-    well as my [trick](https://groups.google.com/d/msg/qiime-forum/KEvXuLwJB70/LEaY4N9JXucJ) on how to quickly make 
-    a representative sequence file based on the SILVA aligned fasta files.
+6) Pick OTUs for 99%, 97%, 94%. Do this on the unaligned SILVA data. 
     
 7) From [QIIME](http://qiime.org) run [pick_rep_set.py](http://qiime.org/scripts/pick_rep_set.html) to make your OTU FASTA file.
+    See this [thread](https://groups.google.com/d/msg/qiime-forum/KEvXuLwJB70/FK7h2e_gjjIJ) as 
+    well as my [trick](https://groups.google.com/d/msg/qiime-forum/KEvXuLwJB70/LEaY4N9JXucJ) on how to quickly make 
+    a representative sequence file based on the SILVA aligned fasta files.
 
 8) Remove the OTU ID labels from the OTU FASTA (representative sequence) headers so that 
     they match the taxonomy file IDs from Step 3. Use the script [fix_fasta_labels.py](https://gist.github.com/walterst/f5c619799e6dc1f575a0) from [@walterst](https://gist.github.com/walterst) on your OTU FASTA file
