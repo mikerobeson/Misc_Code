@@ -61,7 +61,8 @@ His notes are contained within [Silva_119_provisional_release.zip](http://www.ar
     file. Especially, if you want to make your own database from SILVA (e.g. LSU).
 
 
-```Now you have two file that can be use to train your classifier or use for BLAST:
+```
+    Now you have two file that can be use to train your classifier or use for BLAST:
     RDP friendly taxonomy:                      <taxonomy.rdp.outfile.txt>
     FASTA file with only Accession headers:     <sequence.outfile.fasta>
 ```
