@@ -4,24 +4,56 @@ SILVA_to_RDP
 Python code to parse SILVA fasta database files into usable form for the RDP classifier.
 
 
-This collection of scripts will take a fasta formatted database file from the SILVA
-archive (http://www.arb-silva.de/download/archive/) and convert it into a form usable
+This collection of scripts will take a fasta formatted database file from the [SILVA
+archive](http://www.arb-silva.de/download/archive/) and convert it into a form usable
 by the RDP classifier. For example, I typically use these scripts to create my own LSU 
-database for classifying Fungi via the RDP classifier (http://rdp.cme.msu.edu) 
-through QIIME (http://qiime.org).
+database for classifying Fungi via the [RDP classifier](http://rdp.cme.msu.edu) 
+through [QIIME](http://qiime.org).
 
-This code makes use of PyCogent (http://pycogent.org).
+This code currently makes use of [PyCogent](http://pycogent.org) and will eventually 
+be converted over to [scikit-bio](http://scikit-bio.org). 
+
+This code was used, in part, to create the latest [Silva v119](http://www.arb-silva.de/no_cache/download/archive/qiime/)
+reference database for [QIIME](http://qiime.org). I've updated the documentation here to 
+reflect a more streamlined approach as suggested by @walterst. 
+His notes are contained within [Silva_119_provisional_release.zip](http://www.arb-silva.de/fileadmin/silva_databases/qiime/Silva_119_provisional_release.zip).
 
 
 USE:
 
-    1) Download a SILVA fasta file.
+    1)	Download either an ungapped or ungapped SILVA fasta file of choice.
+    
+    2)	From [Primer Prospector](http://pprospector.sourceforge.net/index.html) run:
+		[clean_fasta.py](http://pprospector.sourceforge.net/scripts/clean_fasta.html)
+		This step is just to make sure the input files are sane for the following steps.
+    
+	3)	Pick OTUs for 99%, 97%, 94%. Do this for unaligned data. See this [thread](https://groups.google.com/d/msg/qiime-forum/KEvXuLwJB70/FK7h2e_gjjIJ) and 
+		see my [trick](https://groups.google.com/d/msg/qiime-forum/KEvXuLwJB70/LEaY4N9JXucJ) on how to quickly make 
+		a representative sequence file based on the SILVA aligned fasta files.
+    	
+	4)	From [QIIME](http://qiime.org) run [pick_rep_set.py](http://qiime.org/scripts/pick_rep_set.html)
+    
+	5)	Use the script [fix_fasta_labels.py](https://gist.github.com/walterst/f5c619799e6dc1f575a0) from @walterst to create fasta
+		files that match the representative sequence ID (e.g. remove the OTU ID label)
 
-    2) run:
-        python prep_silva_data.py <silva.fasta> <taxonomy.outfile.txt> <sequence.outfile.fasta>
+	6)	For the unclustered raw sequence data run:
+		python prep_silva_data.py <silva.fasta> <taxonomy.outfile.txt> <sequence.outfile.fasta>
+        
+	7)	Remove any non-ASCII characters using the script [parse_nonstandard_chars.py](https://gist.github.com/walterst/0a4d36dbb20c54eeb952) from @walterst.
+    
+	8)	Take the newly created taxonomy file and make it RDP friendly:
+		python prep_silva_taxonomy_file.py <taxonomy.outfile.txt> <taxonomy.rdp.outfile.txt>
 
-    3) then take the newly created taxonomy file and make it RDP friendly:
-        python prep_silva_taxonomy_file.py <taxonomy.outfile.txt> <taxonomy.rdp.outfile.txt>
+	9)	OPTIONAL : If you want to force a 7-level taxonomy file you can make use of another
+		script by @walterst: [parse_to_7_taxa_levels.py](https://gist.github.com/walterst/9ddb926fece4b7c0e12c)
+    
+	10)	OPTIONAL : Reduce the size of the SILVA alignment file as I recomend in this [post](https://groups.google.com/d/msg/qiime-forum/KEvXuLwJB70/LEaY4N9JXucJ). 
+		Another approach was used by @walterst in the above mentioned SILVA v119 
+		notes file. That is, to create a [lane mask](https://gist.github.com/walterst/db491ba0fd3916af6f5e)
+    	 
+	11) I encourage that everyone read the great notes file from @walterst within the 
+		[Silva_119_provisional_release.zip](http://www.arb-silva.de/fileadmin/silva_databases/qiime/Silva_119_provisional_release.zip) file
+
 
     Now you have two file that can be use to train your classifier or use for BLAST:
         RDP friendly taxonomy:                      <taxonomy.rdp.outfile.txt> 
