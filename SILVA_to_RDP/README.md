@@ -15,7 +15,7 @@ be converted over to [scikit-bio](http://scikit-bio.org).
 
 This code was used, in part, to create the latest [Silva v119](http://www.arb-silva.de/no_cache/download/archive/qiime/)
 reference database for [QIIME](http://qiime.org). I've updated the documentation here to 
-reflect a more streamlined approach as suggested by [@walterst](https://https://github.com/walterst). 
+reflect a more streamlined approach as suggested by [@walterst](https://github.com/walterst). 
 His notes are contained within [Silva_119_provisional_release.zip](http://www.arb-silva.de/fileadmin/silva_databases/qiime/Silva_119_provisional_release.zip).
 
 
