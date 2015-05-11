@@ -20,42 +20,42 @@ His notes are contained within [Silva_119_provisional_release.zip](http://www.ar
 
 
 ## Procedure
-	1)	Download either an ungapped or ungapped SILVA fasta file of choice.
+1)	Download either an ungapped or ungapped SILVA fasta file of choice.
     
-    2)	From [Primer Prospector](http://pprospector.sourceforge.net/index.html) run:
-		[clean_fasta.py](http://pprospector.sourceforge.net/scripts/clean_fasta.html)
-		This step is just to make sure the input files are sane for the following steps.
+2)	From [Primer Prospector](http://pprospector.sourceforge.net/index.html) run:
+	[clean_fasta.py](http://pprospector.sourceforge.net/scripts/clean_fasta.html)
+	This step is just to make sure the input files are sane for the following steps.
     
-	3)	Pick OTUs for 99%, 97%, 94%. Do this for unaligned data. See this [thread](https://groups.google.com/d/msg/qiime-forum/KEvXuLwJB70/FK7h2e_gjjIJ) and 
-		see my [trick](https://groups.google.com/d/msg/qiime-forum/KEvXuLwJB70/LEaY4N9JXucJ) on how to quickly make 
-		a representative sequence file based on the SILVA aligned fasta files.
+3)	Pick OTUs for 99%, 97%, 94%. Do this for unaligned data. See this [thread](https://groups.google.com/d/msg/qiime-forum/KEvXuLwJB70/FK7h2e_gjjIJ) and 
+	see my [trick](https://groups.google.com/d/msg/qiime-forum/KEvXuLwJB70/LEaY4N9JXucJ) on how to quickly make 
+	a representative sequence file based on the SILVA aligned fasta files.
     	
-	4)	From [QIIME](http://qiime.org) run [pick_rep_set.py](http://qiime.org/scripts/pick_rep_set.html)
+4)	From [QIIME](http://qiime.org) run [pick_rep_set.py](http://qiime.org/scripts/pick_rep_set.html)
     
-	5)	Use the script [fix_fasta_labels.py](https://gist.github.com/walterst/f5c619799e6dc1f575a0) from @walterst to create fasta
-		files that match the representative sequence ID (e.g. remove the OTU ID label)
+5)	Use the script [fix_fasta_labels.py](https://gist.github.com/walterst/f5c619799e6dc1f575a0) from @walterst to create fasta
+	files that match the representative sequence ID (e.g. remove the OTU ID label)
 
-	6)	For the unclustered raw sequence data run:
-		python prep_silva_data.py <silva.fasta> <taxonomy.outfile.txt> <sequence.outfile.fasta>
-        
-	7)	Remove any non-ASCII characters using the script [parse_nonstandard_chars.py](https://gist.github.com/walterst/0a4d36dbb20c54eeb952) from @walterst.
+6)	For the unclustered raw sequence data run:
+	python prep_silva_data.py <silva.fasta> <taxonomy.outfile.txt> <sequence.outfile.fasta>
     
-	8)	Take the newly created taxonomy file and make it RDP friendly:
-		python prep_silva_taxonomy_file.py <taxonomy.outfile.txt> <taxonomy.rdp.outfile.txt>
+7)	Remove any non-ASCII characters using the script [parse_nonstandard_chars.py](https://gist.github.com/walterst/0a4d36dbb20c54eeb952) from @walterst.
+    
+8)	Take the newly created taxonomy file and make it RDP friendly:
+	python prep_silva_taxonomy_file.py <taxonomy.outfile.txt> <taxonomy.rdp.outfile.txt>
 
-	9)	OPTIONAL : If you want to force a 7-level taxonomy file you can make use of another
-		script by @walterst: [parse_to_7_taxa_levels.py](https://gist.github.com/walterst/9ddb926fece4b7c0e12c)
+9)	OPTIONAL : If you want to force a 7-level taxonomy file you can make use of another
+	script by @walterst: [parse_to_7_taxa_levels.py](https://gist.github.com/walterst/9ddb926fece4b7c0e12c)
     
-	10)	OPTIONAL : Reduce the size of the SILVA alignment file as I recomend in this [post](https://groups.google.com/d/msg/qiime-forum/KEvXuLwJB70/LEaY4N9JXucJ). 
-		Another approach was used by @walterst in the above mentioned SILVA v119 
-		notes file. That is, to create a [lane mask](https://gist.github.com/walterst/db491ba0fd3916af6f5e)
+10)	OPTIONAL : Reduce the size of the SILVA alignment file as I recomend in this [post](https://groups.google.com/d/msg/qiime-forum/KEvXuLwJB70/LEaY4N9JXucJ). 
+	Another approach was used by @walterst in the above mentioned SILVA v119 
+	notes file. That is, to create a [lane mask](https://gist.github.com/walterst/db491ba0fd3916af6f5e)
     	 
-	11) I encourage that everyone read the great notes file from @walterst within the 
+11) I encourage that everyone read the great notes file from @walterst within the 
 		[Silva_119_provisional_release.zip](http://www.arb-silva.de/fileadmin/silva_databases/qiime/Silva_119_provisional_release.zip) file
 
 
-    Now you have two file that can be use to train your classifier or use for BLAST:
-        RDP friendly taxonomy:                      <taxonomy.rdp.outfile.txt> 
-        FASTA file with only Accession headers:     <sequence.outfile.fasta>
+Now you have two file that can be use to train your classifier or use for BLAST:
+    RDP friendly taxonomy:                      <taxonomy.rdp.outfile.txt> 
+    FASTA file with only Accession headers:     <sequence.outfile.fasta>
 
 
