@@ -44,16 +44,18 @@ The following procedures below should work identically.
 6) Pick OTUs for 99%, 97%, 94%. Do this on the unaligned SILVA data. See this [thread](https://groups.google.com/d/msg/qiime-forum/KEvXuLwJB70/FK7h2e_gjjIJ) as 
     well as my [trick](https://groups.google.com/d/msg/qiime-forum/KEvXuLwJB70/LEaY4N9JXucJ) on how to quickly make 
     a representative sequence file based on the SILVA aligned fasta files.
+    
+7) From [QIIME](http://qiime.org) run [pick_rep_set.py](http://qiime.org/scripts/pick_rep_set.html) to make your OTU FASTA file.
 
-7) Remove the OTU ID labels from the OTU FASTA (representative sequence) headers so that 
+8) Remove the OTU ID labels from the OTU FASTA (representative sequence) headers so that 
     they match the taxonomy file IDs from Step 3. Use the script [fix_fasta_labels.py](https://gist.github.com/walterst/f5c619799e6dc1f575a0) from [@walterst](https://gist.github.com/walterst) on your OTU FASTA file
     so that they match the actual representative sequence ID in the SILVA database (e.g. remove the OTU ID label).
     Now you can use the unaligned OTU FASTA files and the taxonomy file for [assign_taxonomy.py](http://qiime.org/scripts/assign_taxonomy.html)
 
-8) OPTIONAL : If you want to force a 7-level taxonomy file you can make use of another
+9) OPTIONAL : If you want to force a 7-level taxonomy file you can make use of another
     script by [@walterst](https://gist.github.com/walterst): [parse_to_7_taxa_levels.py](https://gist.github.com/walterst/9ddb926fece4b7c0e12c)
     
-9) OPTIONAL : Reduce the size of the SILVA alignment file as I recomend in this [post](https://groups.google.com/d/msg/qiime-forum/KEvXuLwJB70/LEaY4N9JXucJ). 
+10) OPTIONAL : Reduce the size of the SILVA alignment file as I recomend in this [post](https://groups.google.com/d/msg/qiime-forum/KEvXuLwJB70/LEaY4N9JXucJ). 
     Another approach was used by [@walterst](https://gist.github.com/walterst) in the above mentioned SILVA v119 
     notes file. That is, to create a [lane mask.](https://gist.github.com/walterst/db491ba0fd3916af6f5e), and feed to
     [filter_alignment.py](http://qiime.org/scripts/filter_alignment.html). Then use this as your reference alignment 
