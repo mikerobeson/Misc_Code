@@ -18,9 +18,8 @@ reference database for [QIIME](http://qiime.org). I've updated the documentation
 reflect a more streamlined approach as suggested by [@walterst](https://gist.github.com/walterst). 
 His notes are contained within [Silva_119_provisional_release.zip](http://www.arb-silva.de/fileadmin/silva_databases/qiime/Silva_119_provisional_release.zip).
 
-The following procedures below should work identically.
 
-## Procedure 1
+## Procedure
 1) Download either an ungapped or ungapped SILVA fasta file of choice from [here](http://www.arb-silva.de/download/archive/).
     
 2) OPTIONAL : From [Primer Prospector](http://pprospector.sourceforge.net/index.html) run.
@@ -60,47 +59,6 @@ The following procedures below should work identically.
     notes file. That is, to create a [lane mask.](https://gist.github.com/walterst/db491ba0fd3916af6f5e), and feed to
     [filter_alignment.py](http://qiime.org/scripts/filter_alignment.html). Then use this as your reference alignment 
     for [align_seqs.py](http://qiime.org/scripts/align_seqs.html)
-
-
-
-## Procedure 2 (summarized version of [@walterst's](https://gist.github.com/walterst) approach)
-1) Download either an ungapped or ungapped SILVA fasta file of choice from [here](http://www.arb-silva.de/download/archive/).
-    
-2) From [Primer Prospector](http://pprospector.sourceforge.net/index.html) run
-    [clean_fasta.py](http://pprospector.sourceforge.net/scripts/clean_fasta.html)
-    This step is just to make sure the input files are sane for the following steps.
-    
-3) Pick OTUs for 99%, 97%, 94%. Do this for unaligned data. See this [thread](https://groups.google.com/d/msg/qiime-forum/KEvXuLwJB70/FK7h2e_gjjIJ) as 
-    well as my [trick](https://groups.google.com/d/msg/qiime-forum/KEvXuLwJB70/LEaY4N9JXucJ) on how to quickly make 
-    a representative sequence file based on the SILVA aligned fasta files.
-    	
-4) From [QIIME](http://qiime.org) run [pick_rep_set.py](http://qiime.org/scripts/pick_rep_set.html) to make your OTU FASTA file.
-    
-5) Use the script [fix_fasta_labels.py](https://gist.github.com/walterst/f5c619799e6dc1f575a0) from [@walterst](https://gist.github.com/walterst) on your OTU FASTA file
-    so that they match the actual representative sequence ID in the SILVA database (e.g. remove the OTU ID label)
-
-6) Generate a full taxonomy and raw fasta file from the unclustered raw sequence data. 
-    Using this procedure we do not use the fasta file.
-    `python prep_silva_data.py <silva.fasta> <taxonomy.outfile.txt> <sequence.outfile.fasta>`
-    
-7) Remove any non-ASCII characters from the newly created taxonomy file using the script
-    [parse_nonstandard_chars.py](https://gist.github.com/walterst/0a4d36dbb20c54eeb952) from [@walterst](https://gist.github.com/walterst).
-    These characters can cause the RDP classifier and other programs to fail.
-    
-8) Take the corrected taxonomy file and make it RDP friendly.
-    `python prep_silva_taxonomy_file.py <taxonomy.outfile.txt> <taxonomy.rdp.outfile.txt>`
-    As there can be many more than 7-levels of taxonomy (see below), you can change the 
-    default parameters for `summarize_taxa` in your [qiime_config file](http://qiime.org/install/qiime_config.html). For example you 
-    can add these lines to the qiime_config file:  
-    `summarize_taxa:level	2,3,4,5,6,7,8,9,10,11`. 
-    This is beneficial when using [summarize_taxa_through_plots.py](http://qiime.org/scripts/summarize_taxa_through_plots.html)
-
-9) OPTIONAL : If you want to force a 7-level taxonomy file you can make use of another.
-    script by [@walterst](https://gist.github.com/walterst): [parse_to_7_taxa_levels.py](https://gist.github.com/walterst/9ddb926fece4b7c0e12c)
-    
-10) OPTIONAL : Reduce the size of the SILVA alignment file as I recomend in this [post](https://groups.google.com/d/msg/qiime-forum/KEvXuLwJB70/LEaY4N9JXucJ). 
-    Another approach was used by [@walterst](https://gist.github.com/walterst) in the above mentioned SILVA v119 
-    notes file. That is, to create a [lane mask.](https://gist.github.com/walterst/db491ba0fd3916af6f5e)
     	 
 11) I encourage that everyone read the great notes file from [@walterst](https://gist.github.com/walterst) within the 
     [Silva_119_provisional_release.zip](http://www.arb-silva.de/fileadmin/silva_databases/qiime/Silva_119_provisional_release.zip) 
