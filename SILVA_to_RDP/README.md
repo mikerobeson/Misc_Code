@@ -36,13 +36,13 @@ His notes are contained within [Silva_119_provisional_release.zip](http://www.ar
 	so that they match the actual representative sequence ID in the SILVA database (e.g. remove the OTU ID label)
 
 6)	Generate a full taxonomy file from the unclustered raw sequence data:
-	python prep_silva_data.py <silva.fasta> <taxonomy.outfile.txt> <sequence.outfile.fasta>
+	`python prep_silva_data.py <silva.fasta> <taxonomy.outfile.txt> <sequence.outfile.fasta>`
     
 7)	Remove any non-ASCII characters using the script [parse_nonstandard_chars.py](https://gist.github.com/walterst/0a4d36dbb20c54eeb952) from [@walterst](https://gist.github.com/walterst).
 	These characters can cause the RDP classifier and other programs to fail.
     
 8)	Take the newly created taxonomy file and make it RDP friendly:
-	python prep_silva_taxonomy_file.py <taxonomy.outfile.txt> <taxonomy.rdp.outfile.txt>
+	`python prep_silva_taxonomy_file.py <taxonomy.outfile.txt> <taxonomy.rdp.outfile.txt>`
 	As there can be many more than 7-levels of taxonomy (see below), you can change the 
 	default parameters for `summarize_taxa` in your [qiime_config file](http://qiime.org/install/qiime_config.html). For example you 
 	can add these lines to the qiime_config file:  
