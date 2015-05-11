@@ -19,9 +19,8 @@ reflect a more streamlined approach as suggested by @walterst.
 His notes are contained within [Silva_119_provisional_release.zip](http://www.arb-silva.de/fileadmin/silva_databases/qiime/Silva_119_provisional_release.zip).
 
 
-USE:
-
-    1)	Download either an ungapped or ungapped SILVA fasta file of choice.
+## Procedure
+	1)	Download either an ungapped or ungapped SILVA fasta file of choice.
     
     2)	From [Primer Prospector](http://pprospector.sourceforge.net/index.html) run:
 		[clean_fasta.py](http://pprospector.sourceforge.net/scripts/clean_fasta.html)
