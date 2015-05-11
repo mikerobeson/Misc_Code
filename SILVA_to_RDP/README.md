@@ -20,7 +20,7 @@ His notes are contained within [Silva_119_provisional_release.zip](http://www.ar
 
 
 ## Procedure
-1)	Download either an ungapped or ungapped SILVA fasta file of choice from [here]((http://www.arb-silva.de/download/archive/).
+1)	Download either an ungapped or ungapped SILVA fasta file of choice from [here](http://www.arb-silva.de/download/archive/).
     
 2)	From [Primer Prospector](http://pprospector.sourceforge.net/index.html) run:
 	[clean_fasta.py](http://pprospector.sourceforge.net/scripts/clean_fasta.html)
@@ -54,10 +54,11 @@ His notes are contained within [Silva_119_provisional_release.zip](http://www.ar
     
 10)	OPTIONAL : Reduce the size of the SILVA alignment file as I recomend in this [post](https://groups.google.com/d/msg/qiime-forum/KEvXuLwJB70/LEaY4N9JXucJ). 
 	Another approach was used by [@walterst](https://gist.github.com/walterst) in the above mentioned SILVA v119 
-	notes file. That is, to create a [lane mask](https://gist.github.com/walterst/db491ba0fd3916af6f5e)
+	notes file. That is, to create a [lane mask.](https://gist.github.com/walterst/db491ba0fd3916af6f5e)
     	 
 11) I encourage that everyone read the great notes file from [@walterst](https://gist.github.com/walterst) within the 
-		[Silva_119_provisional_release.zip](http://www.arb-silva.de/fileadmin/silva_databases/qiime/Silva_119_provisional_release.zip) file
+	[Silva_119_provisional_release.zip](http://www.arb-silva.de/fileadmin/silva_databases/qiime/Silva_119_provisional_release.zip) 
+	file. Especially, if you want to make your own database from SILVA (e.g. LSU).
 
 
 Now you have two file that can be use to train your classifier or use for BLAST:
