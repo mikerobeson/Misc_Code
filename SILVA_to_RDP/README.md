@@ -75,7 +75,7 @@ His notes are contained within [Silva_119_provisional_release.zip](http://www.ar
     RDP friendly taxonomy:                      <taxonomy.rdp.outfile.txt>
     FASTA file with only Accession headers:     <sequence.outfile.fasta>
     
-    Obvuosly, keeping in mind any minor file edits as needed. See above Procedures.
+    Obviously, keeping in mind any minor formatting edits as needed. See above Procedure.
 ```
 
 
