@@ -37,7 +37,7 @@ His notes are contained within [Silva_119_provisional_release.zip](http://www.ar
     `python prep_silva_taxonomy_file.py <taxonomy.outfile.txt> <taxonomy.rdp.outfile.txt>`
     As there can be many more than 7-levels of taxonomy (see below), you can change the 
     default parameters for `summarize_taxa` in your [QIIME parameters file](http://qiime.org/documentation/qiime_parameters_files.html). For example you 
-    can add these lines to the qiime_config file: `summarize_taxa:level	2,3,4,5,6,7,8,9,10,11`. 
+    can add these lines to the qiime parameters file: `summarize_taxa:level	2,3,4,5,6,7,8,9,10,11`. 
     This is beneficial when using [summarize_taxa_through_plots.py](http://qiime.org/scripts/summarize_taxa_through_plots.html)
 
 6) Run [pick_otus.py](http://qiime.org/scripts/pick_otus.html) for 99%, 97%, 94%. Do this on the unaligned SILVA data. 
