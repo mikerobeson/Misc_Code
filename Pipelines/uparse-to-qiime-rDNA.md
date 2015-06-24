@@ -20,6 +20,7 @@ Look into:
 
 #### 3) Trim primers - if you have them. ####
 [cutadapt](https://github.com/marcelm/cutadapt) -g GTGYCAGCMGCCGCGGTA -a ATTAGAWACCCBDGTAGTCC -n 2 -e 0.1 --discard-untrimmed --match-read-wildcards seqs.fastq -o seqs.prtrim.fastq 
+
 *There are many primer trimming tools out there, but I think `cutadap` is ideal. Notice, I use the detection of primers as a form of quality control. That is, I discard any sequence in which I cannot detect both the forward and reverse primers.*
 
 #### 4) Get basic fastq stats to guide your quality filtering. ####
