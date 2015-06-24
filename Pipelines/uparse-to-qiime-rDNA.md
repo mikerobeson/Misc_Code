@@ -1,17 +1,19 @@
 ## UPARSE-to-QIIME for rDNA ##
 
+This is an update of a pipleine I had previously posted [here](https://groups.google.com/forum/#!msg/qiime-forum/zqmvpnZe26g/ksFmMwDHPi8J)
+
 Depending on how your sequencing facility has processed your sequencing data some of the initial steps below may have to be altered. Some suggestions:
 
 Look into:
    - QIIME's [multiple_join_paired_ends.py](http://qiime.org/scripts/multiple_join_paired_ends.html)
    - QIIME's [multiple_split_libraries_fastq.py](http://qiime.org/scripts/multiple_split_libraries_fastq.html)
-   - If using Linux, I've found that using the [rename](http://www.computerhope.com/unix/rename.htm) command can be quite helpful for relabeling folders post multiple_split_libraries_fastq.py processing.
+   - If using Linux, I've found that using the [rename](http://www.computerhope.com/unix/rename.htm) command can be quite helpful for relabeling folders post `multiple_split_libraries_fastq.py` processing.
     
 
 #### 1) Merge paired ends. ####
 [join_paired_ends.py](http://qiime.org/scripts/join_paired_ends.html) -m fastq-join -b index.fastq -f R1.reads.fastq -r R2.reads.fastq -o merged_output/
 
-*If you've an alternative tool to merge your paired ends but still need to sync your index (barcode) reads with your merged reads (i.e. many reads will fail to merge) then you can make use of my [remove_unused_barcodes.py](https://gist.github.com/mikerobeson/e5c0f0678a4785f8cf05) script. Keep in mind that the reads in both files should be in the same order, except for cases where the merged read for the corresponding index read is missing. If you are using `multiple_join_paired_ends.py` you can set options via the [parameters](http://qiime.org/documentation/qiime_parameters_files.html) file**
+*If you've an alternative tool to merge your paired ends but still need to sync your index (barcode) reads with your merged reads (i.e. many reads will fail to merge) then you can make use of my [remove_unused_barcodes.py](https://gist.github.com/mikerobeson/e5c0f0678a4785f8cf05) script. Keep in mind that the reads in both files should be in the same order, except for cases where the merged read for the corresponding index read is missing. If you are using `multiple_join_paired_ends.py` you can set options via the [parameters](http://qiime.org/documentation/qiime_parameters_files.html) filei.*
 
 #### 2) Split your libraries with quality filtering disabled or minimized. ####
 [split_libraries_fastq.py](http://qiime.org/scripts/split_libraries_fastq.html) -q 0 --max_bad_run_length --min_per_read_length_fraction 0.001 250 --store_demultiplexed_fastq -m miseq2_mapping.txt --barcode_type golay_12 -b merged.barcodes.fastq --rev_comp_mapping_barcodes -i merged.fastq -o sl_out
@@ -21,7 +23,7 @@ Look into:
 #### 3) Trim primers - if you have them. ####
 [cutadapt](https://github.com/marcelm/cutadapt) -g GTGYCAGCMGCCGCGGTA -a ATTAGAWACCCBDGTAGTCC -n 2 -e 0.1 --discard-untrimmed --match-read-wildcards seqs.fastq -o seqs.prtrim.fastq 
 
-*There are many primer trimming tools out there, but I think `cutadap` is ideal. Notice, I use the detection of primers as a form of quality control. That is, I discard any sequence in which I cannot detect both the forward and reverse primers.*
+*There are many primer trimming tools out there, but I think `cutadapt` is ideal. Notice, I use the detection of primers as a form of quality control. That is, I discard any sequence in which I cannot detect both the forward and reverse primers.*
 
 #### 4) Get basic fastq stats to guide your quality filtering. ####
 usearch7 -fastq_stats seqs.prtrim.fastq -log seqs.prtrim.stats.log.txt
