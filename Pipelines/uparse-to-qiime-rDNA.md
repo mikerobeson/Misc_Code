@@ -13,7 +13,7 @@ Look into:
 
 *If you've an alternative tool to merge your paired ends but still need to sync your index (barcode) reads with your merged reads (i.e. many reads will fail to merge) then you can make use of my [remove_unused_barcodes.py](https://gist.github.com/mikerobeson/e5c0f0678a4785f8cf05) script. Keep in mind that the reads in both files should be in the same order, except for cases where the merged read for the corresponding index read is missing. If you are using `multiple_join_paired_ends.py` you can set options via the [parameters](http://qiime.org/documentation/qiime_parameters_files.html) file**
 
-#### 2) Split your libraries with quality filtering disabled / minimized. #### 
+#### 2) Split your libraries with quality filtering disabled or minimized.#### 
 [split_libraries_fastq.py](http://qiime.org/scripts/split_libraries_fastq.html) -q 0 --max_bad_run_length --min_per_read_length_fraction 0.001 250 --store_demultiplexed_fastq -m miseq2_mapping.txt --barcode_type golay_12 -b merged.barcodes.fastq --rev_comp_mapping_barcodes -i merged.fastq -o sl_out
 
 *Remember, I decided to use the UPARSE quality filtering protocol instead of the one built-into `split_libraries_fastq.py`. For more info see [this](http://drive5.com/usearch/manual/avgq.html). This is why we use the `--store_demultiplexed_fastq` option. However, this quality filtering approach is optional, I sometimes use the the split libraries command above to do the quality filtering instead of UPARSE, it depends on the data. I initially mentioned some of these ideas [here](https://groups.google.com/d/msg/qiime-forum/zqmvpnZe26g/paTB6OSRiGwJ). If you are using `multiple_split_libraries.py` you can set many of these options via the [parameters](http://qiime.org/documentation/qiime_parameters_files.html) file. Whatever you end up doing, just make sure all your demultiplexed data is merged into one file. Use the [cat](https://en.wikipedia.org/wiki/Cat_(Unix)) command if needed. Eitherway you should have a final file called `seqs.fastq`*
@@ -39,7 +39,7 @@ usearch7 -sortbysize seqs.prtrim.filt.derep.fasta -output seqs.prtrim.filt.derep
 #### 8) Pick OTUs, perform *de novo* chimera checking. ####
 usearch7 -cluster_otus seqs.prtrim.filt.derep.mc2.fasta -otus seqs.prtrim.filt.derep.mc2.repset.fasta
 
-*Note: despite what is said in [this](http://onlinelibrary.wiley.com/doi/10.1111/1462-2920.12610/abstract;jsessionid=2CD2390EEFFF1D570F2B94CAC3638AA7.f04t04) paper, it has always been possible to disable de novo chimera chekcing. All you need to do is add the flag `-uparse_break -999` to the above command. This effectively sets up the case for which "... chimeric models would never be optimal" See my initial post about this [here](https://groups.google.com/d/msg/qiime-forum/zqmvpnZe26g/V7hUUskPrqgJ).*
+*Note: despite what is said in [this](http://onlinelibrary.wiley.com/doi/10.1111/1462-2920.12610/abstract;jsessionid=2CD2390EEFFF1D570F2B94CAC3638AA7.f04t04) paper, it has always been possible to disable de novo chimera checking. All you need to do is add the flag `-uparse_break -999` to the above command. This effectively sets up the case for which "... chimeric models would never be optimal" See my initial post about this [here](https://groups.google.com/d/msg/qiime-forum/zqmvpnZe26g/V7hUUskPrqgJ).*
 
 #### 9) Perform reference-based chimera checking. ####
 usearch7 -uchime_ref seqs.prtrim.filt.derep.mc2.repset.fasta -db greengenes.otus.97 -strand plus -minh 0.5 -nonchimeras seqs.prtrim.filt.derep.mc2.repset.nochimeras.fasta -chimeras seqs.prtrim.filt.derep.mc2.repset.chimeras.fasta -uchimealns seqs.prtrim.filt.derep.mc2.repset.chimeraalns.txt -threads 24
@@ -49,7 +49,7 @@ usearch7 -uchime_ref seqs.prtrim.filt.derep.mc2.repset.fasta -db greengenes.otus
 #### 10) Relabel your representativ sequences with 'OTU' labels. ####
 python fasta_number.py seqs.prtrim.filt.derep.mc2.repset.nochimeras.fasta OTU_ > seqs.prtrim.filt.derep.mc2.repset.nochimeras.OTUs.fasta
 
-*This python script can be obtained from [here](http://drive5.com/python/).*
+*This and other UPARSE python scripts can be obtained from [here](http://drive5.com/python/).*
 
 #### 11) Map the original quality filtered reads back to relabeled OTUs we just made####
 usearch7 -usearch_global seqs.prtrim.filt.fasta -db seqs.prtrim.filt.derep.mc2.repset.nochimeras.OTUs.fasta -strand plus -id 0.97 -uc otu.map.uc -threads 24
@@ -57,7 +57,7 @@ usearch7 -usearch_global seqs.prtrim.filt.fasta -db seqs.prtrim.filt.derep.mc2.r
 #### 12) Make tab-delim OTU table ####
 python uc2otutab_mod.py otu.map.uc > seqs.prtrim.filt.derep.mc2.repset.nochimeras.OTUTable.txt
 
-*Note: make OTU table. I modified the function 'GetSampleID' in the script 'uc2otutab.py' and renamed the script 'uc2otutab_mod.py'. The modified function is:*
+*Note: I modified the function 'GetSampleID' in the script 'uc2otutab.py' from [here](http://drive5.com/python/) and renamed the script 'uc2otutab_mod.py'. The modified function is:*
 
     def GetSampleId(Label): 
        SampleID = Label.split()[0].split('_')[0] 
@@ -75,7 +75,7 @@ python uc2otutab_mod.py otu.map.uc > seqs.prtrim.filt.derep.mc2.repset.nochimera
 *Or use your favorite taxonomy assignment protocol within QIIME 1.9.1 or elsewhere.*
 
 #### 15) Add taxonomy to biom table. ####
-biom add-metadata -i seqs.prtrim.filt.derep.mc2.repset.nochimeras.OTUTable.biom -o seqs.prtrim.filt.derep.mc2.repset.nochimeras.OTUTable.rdpggtax.biom --observation-metadata-fp rdp_gg97_assigned_taxonomy/seqs.prtrim.filt.derep.mc2.repset.nochimeras.OTUs_tax_assignments.txt --observation-header OTUID,taxonomy --sc-separated taxonomy
+[biom add-metadata](http://biom-format.org/documentation/adding_metadata.html) -i seqs.prtrim.filt.derep.mc2.repset.nochimeras.OTUTable.biom -o seqs.prtrim.filt.derep.mc2.repset.nochimeras.OTUTable.rdpggtax.biom --observation-metadata-fp rdp_gg97_assigned_taxonomy/seqs.prtrim.filt.derep.mc2.repset.nochimeras.OTUs_tax_assignments.txt --observation-header OTUID,taxonomy --sc-separated taxonomy
 
 #### 16) make a tab-delim (classic) version of the OTU table####
 biom convert -i seqs.prtrim.filt.derep.mc2.repset.nochimeras.OTUTable.rdpggtax.biom -o seqs.prtrim.filt.derep.mc2.repset.nochimeras.OTUTable.rdpggtax.txt --to-tsv --header-key taxonomy
