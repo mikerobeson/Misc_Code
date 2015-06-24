@@ -6,4 +6,4 @@ These are a set of are various OTU-picking pipelines that I've used for various 
 - ITS Analysis
 
 
-Many have found this usefull. If you have suggestions, please let me know!
+Many have found this useful. If you have suggestions, please let me know!
