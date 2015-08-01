@@ -43,6 +43,7 @@ Look into:
 - Option 2:  Run my script to execute ITSx on multiple CPUs, then concatenate ITS gene output. Then, just to make this tutorial easier to follow, concatenate all the output from the parallel processing:
 
     [python parallel_itsx.py](https://gist.github.com/mikerobeson/e9b3e2ab05cb3b7a797a) -i seqs.prtrim.filt.derep.fastq -o ITSx.output 24 24000
+
     cat <ITS2.fasta> > seqs.prtrim.itsonly.fastq
 
 
