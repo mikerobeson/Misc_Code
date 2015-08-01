@@ -33,99 +33,67 @@ Look into:
 
 *There are many primer trimming tools out there, but I think `cutadapt` is ideal. Check out the cutadapt documentation to tweak the tool for your needs. Notice, I use the detection of primers as a form of quality control. That is, I discard any sequence in which I cannot detect the primers.*
 
-#### 4) Trim and pad variable length gene prior to quality filtering and OTU clustering
-Follow the global trimming and padding of [variable-length genes](http://www.drive5.com/usearch/manual/global_trimming_its.html).
-
-*Due to how usearch (v7) clusters OTUs, sequences must be trimmed or padded at the 3'-end with terminal Ns up to your preferred sequence length. See the above link for more detail.*
-
-#### 5) Get basic fastq stats to guide your quality filtering. ####
-usearch7 -fastq_stats seqs.prtrim.fastq -log seqs.prtrim.stats.log.txt
-
-#### 6) Quality filter; trim reads to fixed length (if needed). ####
-usearch7 -fastq_filter seqs.prtrim.fastq -fastaout seqs.prtrim.filt.fasta -fastqout seqs.prtrim.filt.fastq -fastq_maxee 0.5 -fastq_trunclen 250
-
-*This command jsut quality filters and trims the reads such that all reads are 250 bp in length. `-fastq_trunclen` will "Truncate sequences at the L'th base. If the sequence is shorter than L, discard. I saved the fastq output just in case I need it.*
-
-#### 7) Dereplicate reads and sort by read count. ####
-usearch7 -derep_fulllength seqs.prtrim.filt.fasta -output seqs.prtrim.filt.derep.fasta -sizeout 
-
-#### 8) OPTIONAL: use ITSx to extract the ITS sequences prior to OTU clustering. ####
+#### 4) OPTIONAL: use ITSx to extract the ITS sequences prior to OTU clustering. ####
 - Option 1: Run ITSx Directly on ITS reads. Then, just to make this tutorial easier to follow rename the output.
 
-    ITSx --cpu 2 --only_full T --save_regions all -t F -i seqs.prtrim.filt.derep.fasta -o ITSx.output
-    mv ITSx.output seqs.prtrim.filt.derep.itsonly.fasta 
+    ITSx --cpu 2 --only_full T --save_regions all -t F -i seqs.prtrim.fastq -o ITSx.output
+    mv ITSx.output seqs.prtrim.itsonly.fastq 
 
 
 - Option 2:  Run my script to execute ITSx on multiple CPUs, then concatenate ITS gene output. Then, just to make this tutorial easier to follow, concatenate all the output from the parallel processing:
 
-    [python parallel_itsx.py](https://gist.github.com/mikerobeson/e9b3e2ab05cb3b7a797a) -i seqs.prtrim.filt.derep.fasta -o ITSx.output 24 24000
-    cat <ITS2.fasta> > seqs.prtrim.filt.derep.itsonly.fasta
+    [python parallel_itsx.py](https://gist.github.com/mikerobeson/e9b3e2ab05cb3b7a797a) -i seqs.prtrim.filt.derep.fastq -o ITSx.output 24 24000
+    cat <ITS2.fasta> > seqs.prtrim.itsonly.fastq
 
 
-*Some colleagues of mine have warned me of potential over-clustering of different fungal taxa when not trimming the conserved rRNA ends of the resulting ITS data. I typically use [ITSx](http://microbiology.se/software/itsx/) when I do have the full ITS gene from merged paired-ends. Though you can fiddle with using this tool on only the forward reads. Mileage may vary. Keep in mind the comments of [Nguyen et al.](http://doi.org/10.1111/nph.12923) about losing taxonomic groups due to failed merges when using paired-end data.*
+*Some colleagues of mine have warned me of potential over-clustering of different fungal taxa when not trimming the conserved rRNA ends of the resulting ITS data. I typically use [ITSx](http://microbiology.se/software/itsx/) when I do have the full ITS gene from merged paired-ends. Though you can fiddle with using this tool on only the forward reads. Mileage may vary. Keep in mind the comments of [Nguyen et al.](http://doi.org/10.1111/nph.12923) about losing taxonomic groups due to failed merges when using paired-end data. You can speed this step up further by processing dereplicated data. If you do this, you need to use a tool that can output dereplicated FASTQ files (usearch v7 does not output dereplicated FASTQ, only FASTA), as the procedure in Step 5 requires operations on FASTQ files.*
 
+#### 5) Pad variable length gene prior to quality filtering and OTU clustering
+Follow the global trimming and padding of [variable-length genes](http://www.drive5.com/usearch/manual/global_trimming_its.html). Lets pretend we did this and we end up with the following files using the `-fastqout` * `-fastaout` commands:
 
-#### 9) Remove singletons ####
-w/o ITSx:
+seqs.prtrim.itsonly.padded.filt.fasta  and  seqs.prtrim.itsonly.padded.filt.fastq
 
-usearch7 -sortbysize seqs.prtrim.filt.derep.fasta -output seqs.prtrim.filt.derep.mc2.fasta -minsize 2
+*Due to how usearch (v7) clusters OTUs, sequences must be trimmed or padded at the 3'-end with terminal Ns up to your preferred sequence length. See the above link for more detail. Note the linked procedure expects you to modify / pad Ns to the FASTQ files prior to runinng steps 5 & 6 below. So, to reiterate my prior comment, if using dereplicated data they should be in FASTQ format.*
 
-w/ ITSx:
+#### 6) Dereplicate reads and sort by read count. ####
+usearch7 -derep_fulllength seqs.prtrim.itsonly.padded.filt.fasta -output seqs.prtrim.itsonly.padded.filt.derep.fasta -sizeout 
 
-usearch7 -sortbysize seqs.prtrim.filt.derep.itsonly.fasta -output seqs.prtrim.filt.derep.itsonly.mc2.fasta -minsize 2
+#### 7) Remove singletons ####
+usearch7 -sortbysize seqs.prtrim.itsonly.padded.filt.derep.fasta -output seqs.prtrim.itsonly.padded.filt.derep.mc2.fasta -minsize 2
 
-
-#### 10) Pick OTUs, perform *de novo* chimera checking. ####
-w/o ITSx:
-
-usearch7 -cluster_otus seqs.prtrim.filt.derep.mc2.fasta -otus seqs.prtrim.filt.derep.mc2.repset.fasta
-
-w/ ITSx:
-
-usearch7 -cluster_otus seqs.prtrim.filt.derep.itsonly.mc2.fasta -otus seqs.prtrim.filt.derep.itsonly.mc2.repset.fasta
+#### 8) Pick OTUs, perform *de novo* chimera checking. ####
+usearch7 -cluster_otus seqs.prtrim.itsonly.padded.filt.derep.mc2.fasta -otus seqs.prtrim.itsonly.padded.filt.derep.mc2.repset.fasta
 
 *Note: despite what is said in [this](http://onlinelibrary.wiley.com/doi/10.1111/1462-2920.12610/abstract;jsessionid=2CD2390EEFFF1D570F2B94CAC3638AA7.f04t04) paper, it has always been possible to disable de novo chimera checking. All you need to do is add the flag `-uparse_break -999` to the above command. This effectively sets up the case for which "... chimeric models would never be optimal" See my initial post about this [here](https://groups.google.com/d/msg/qiime-forum/zqmvpnZe26g/V7hUUskPrqgJ).*
 
-#### 11) Perform reference-based chimera checking against UNITE database. ####
-w/o ITSx:
+#### 9) Remove Ns we added in step 5. 
+Pretend we end up with:
 
-usearch7 -uchime_ref seqs.prtrim.filt.derep.mc2.repset.fasta -db ITSx.ref.db.otus -strand plus -minh 0.5 -nonchimeras seqs.prtrim.filt.derep.mc2.repset.nochimeras.fasta -chimeras seqs.prtrim.filt.derep.mc2.repset.chimeras.fasta -uchimealns seqs.prtrim.filt.derep.mc2.repset.chimeraalns.txt -threads 24
+`seqs.prtrim.itsonly.notpadded.filt.derep.mc2.repset.fasta`
 
-w/ ITSx:
+*We must do this to obtain proper chimera detection and taxonomy assignment*
 
-usearch7 -uchime_ref seqs.prtrim.filt.derep.itsonly.mc2.repset.fasta -db ITSx.ref.db.otus -strand plus -minh 0.5 -nonchimeras seqs.prtrim.filt.derep.itsonly.mc2.repset.nochimeras.fasta -chimeras seqs.prtrim.filt.derep.itsonly.mc2.repset.chimeras.fasta -uchimealns seqs.prtrim.filt.derep.itsonly.mc2.repset.chimeraalns.txt -threads 24
+#### 10) Perform reference-based chimera checking against UNITE database using non-padded sequences. ####
+usearch7 -uchime_ref seqs.prtrim.itsonly.notpadded.filt.derep.mc2.repset.fasta -db ITSx.ref.db.otus -strand plus -minh 0.5 -nonchimeras seqs.prtrim.itsonly.notpadded.filt.derep.mc2.repset.nochimeras.fasta -chimeras seqs.prtrim.itsonly.notpadded.filt.derep.mc2.repset.chimeras.fasta -uchimealns seqs.prtrim.itsonly.notpadded.filt.derep.mc2.repset.chimeraalns.txt -threads 24
 
 *Note: Use the [UNITE](https://unite.ut.ee/repository.php) database for reference chimera detection and taxonomy aassignment for ITS. Also, make sure you check the `-uchimealns` output file. I've often had to adjust the `-minh` setting to something between 0.5 adn 1.5 as the default value of 0.28 can be to aggressive. In fact I've lost dominant OTUs in my data set becuase of this. In short, pick the appropriate reference database and cuttoff values appropriate for your data!*
 
-#### 12) Relabel your representativ sequences with 'OTU' labels. ####
-w/o ITSx:
+#### 11) Filter padded fasta file with non-padded reference chimera fasta file. 
 
-python fasta_number.py seqs.prtrim.filt.derep.mc2.repset.nochimeras.fasta OTU_ > seqs.prtrim.filt.derep.mc2.repset.nochimeras.OTUs.fasta
+filter_fasta.py -a seqs.prtrim.itsonly.notpadded.filt.derep.mc2.repset.nochimeras.fasta -f seqs.prtrim.itsonly.padded.filt.derep.mc2.repset.fasta -o seqs.prtrim.itsonly.padded.filt.derep.mc2.repset.nochimeras.fasta
 
-w/ ITSx:
+*We do this becuase we need to map the original processed reads back to OTUs for the construction of our OTU table in the following steps. So we want to remove the chimeras from the padded file.*
 
-python fasta_number.py seqs.prtrim.filt.derep.itsonly.mc2.repset.nochimeras.fasta OTU_ > seqs.prtrim.filt.derep.itsonly.mc2.repset.nochimeras.OTUs.fasta
-
+#### 12) Relabel your representative sequences with 'OTU' labels. ####
+python fasta_number.py seqs.prtrim.itsonly.padded.filt.derep.mc2.repset.nochimeras.fasta OTU_ > seqs.prtrim.itsonly.padded.filt.derep.mc2.repset.nochimeras.OTUs.fasta
 
 *The UPARSE python scripts can be obtained from [here](http://drive5.com/python/).*
 
 #### 13) Map the original quality filtered reads back to relabeled OTUs we just made####
-w/o ITSx:
-
-usearch7 -usearch_global seqs.prtrim.filt.fasta -db seqs.prtrim.filt.derep.mc2.repset.nochimeras.OTUs.fasta -strand plus -id 0.97 -uc otu.map.uc -threads 24
-
-w/ ITSx:
-
-usearch7 -usearch_global seqs.prtrim.filt.fasta -db seqs.prtrim.filt.derep.itsonly.mc2.repset.nochimeras.OTUs.fasta -strand plus -id 0.97 -uc otu.map.uc -threads 24
+usearch7 -usearch_global seqs.prtrim.itsonly.padded.filt.fasta -db seqs.prtrim.itsonly.padded.filt.derep.mc2.repset.nochimeras.OTUs.fasta -strand plus -id 0.97 -uc otu.map.uc -threads 24
 
 #### 14) Make tab-delim OTU table ####
-w/o ITSx:
-
-python uc2otutab_mod.py otu.map.uc > seqs.prtrim.filt.derep.mc2.repset.nochimeras.OTUTable.txt
-
-w/ ITSx:
-
-python uc2otutab_mod.py otu.map.uc > seqs.prtrim.filt.derep.itsonly.mc2.repset.nochimeras.OTUTable.txt
+python uc2otutab_mod.py otu.map.uc > seqs.prtrim.itsonly.padded.filt.derep.mc2.repset.nochimeras.OTUTable.txt
 
 *Note: I modified the function 'GetSampleID' in the script 'uc2otutab.py' from [here](http://drive5.com/python/) and renamed the script 'uc2otutab_mod.py'. The modified function is:*
 
@@ -137,45 +105,22 @@ python uc2otutab_mod.py otu.map.uc > seqs.prtrim.filt.derep.itsonly.mc2.repset.n
 "ENDO.O.2.KLNG.20.1_19 MISEQ03:119:000000000-A3N4Y:1:2101:28299:16762 1:N:0:GGTATGACTCA orig_bc=GGTATGACTCA new_bc=GGTATGACTCA bc_diffs=0" and all I need is the SampleID: "ENDO.O.2.KLNG.20.1". So I split on the underscore in `ENDO.O.2.KLNG.20.1_19`. Again, see [this](https://groups.google.com/d/msg/qiime-forum/zqmvpnZe26g/ksFmMwDHPi8J) post.*
 
 #### 15) Convert to biom format. ####
-w/o ITSx:
-
-[biom convert](http://biom-format.org/documentation/biom_conversion.html) --table-type="OTU table" --to-json -i seqs.prtrim.filt.derep.mc2.repset.nochimeras.OTUTable.txt -o seqs.prtrim.filt.derep.mc2.repset.nochimeras.OTUTable.biom
-
-w/ ITSx:
-
-biom convert --table-type="OTU table" --to-json -i seqs.prtrim.filt.derep.itsonly.mc2.repset.nochimeras.OTUTable.txt -o seqs.prtrim.filt.derep.itsonly.mc2.repset.nochimeras.OTUTable.biom
+[biom convert](http://biom-format.org/documentation/biom_conversion.html) --table-type="OTU table" --to-json -i seqs.prtrim.itsonly.padded.filt.derep.mc2.repset.nochimeras.OTUTable.txt -o seqs.prtrim.itsonly.padded.filt.derep.mc2.repset.nochimeras.OTUTable.biom
 
 #### 16) Assign taxonomy using blast, uclust, or rdp. ####
-w/o ITSx:
-
-[parallel_assign_taxonomy_blast.py](http://qiime.org/scripts/parallel_assign_taxonomy_blast.html) -v --rdp_max_memory 3000 -O 4 -t ITSx.ref.db.tax -r ITSx.ref.db.otus -i seqs.prtrim.filt.derep.mc2.repset.nochimeras.OTUs.fasta -o rdp_gg97_assigned_taxonomy
-
-w/ ITSx:
-
-parallel_assign_taxonomy_blast.py -v --rdp_max_memory 3000 -O 4 -t ITSx.ref.db.tax -r ITSx.ref.db.otus -i seqs.prtrim.filt.derep.itsonly.mc2.repset.nochimeras.OTUs.fasta -o rdp_gg97_assigned_taxonomy
+[parallel_assign_taxonomy_blast.py](http://qiime.org/scripts/parallel_assign_taxonomy_blast.html) -v -O 4 -t ITSx.ref.db.tax -r ITSx.ref.db.otus -i seqs.prtrim.itsonly.padded.filt.derep.mc2.repset.nochimeras.OTUs.fasta -o blast_assigned_taxonomy
 
 *Or use your favorite taxonomy assignment protocol within QIIME 1.9.1 or elsewhere. However, see [this](http://microbe.net/2015/02/24/issues-classifying-its-data-the-answer-could-be-simply-using-blast-during-taxonomy-assignment-in-qiime/) blog post about issues of ITS taxonomy assignment.*
 
 #### 17) Add taxonomy to biom table. ####
-w/o ITSx:
-
-[biom add-metadata](http://biom-format.org/documentation/adding_metadata.html) -i seqs.prtrim.filt.derep.mc2.repset.nochimeras.OTUTable.biom -o seqs.prtrim.filt.derep.mc2.repset.nochimeras.OTUTable.rdpggtax.biom --observation-metadata-fp rdp_gg97_assigned_taxonomy/seqs.prtrim.filt.derep.mc2.repset.nochimeras.OTUs_tax_assignments.txt --observation-header OTUID,taxonomy --sc-separated taxonomy
-
-w/ ITSx:
-
-biom add-metadata -i seqs.prtrim.filt.derep.itsonly.mc2.repset.nochimeras.OTUTable.biom -o seqs.prtrim.filt.derep.itsonly.mc2.repset.nochimeras.OTUTable.rdpggtax.biom --observation-metadata-fp rdp_gg97_assigned_taxonomy/seqs.prtrim.filt.derep.itsonly.mc2.repset.nochimeras.OTUs_tax_assignments.txt --observation-header OTUID,taxonomy --sc-separated taxonomy
-
+[biom add-metadata](http://biom-format.org/documentation/adding_metadata.html) -i seqs.prtrim.itsonly.padded.filt.derep.mc2.repset.nochimeras.OTUTable.biom -o seqs.prtrim.itsonly.padded.filt.derep.mc2.repset.nochimeras.OTUTable.blasttax.biom --observation-metadata-fp blast_assigned_taxonomy/seqs.prtrim.itsonly.padded.filt.derep.mc2.repset.nochimeras.OTUs_tax_assignments.txt --observation-header OTUID,taxonomy --sc-separated taxonomy
 
 #### 18) make a tab-delim (classic) version of the OTU table####
-w/o ITSx:
+biom convert -i seqs.prtrim.itsonly.padded.filt.derep.mc2.repset.nochimeras.OTUTable.blasttax.biom -o seqs.prtrim.itsonly.padded.filt.derep.mc2.repset.nochimeras.OTUTable.blasttax.txt --to-tsv --header-key taxonomy
 
-biom convert -i seqs.prtrim.filt.derep.mc2.repset.nochimeras.OTUTable.rdpggtax.biom -o seqs.prtrim.filt.derep.mc2.repset.nochimeras.OTUTable.rdpggtax.txt --to-tsv --header-key taxonomy
-
-w/ ITSx:
-
-biom convert -i seqs.prtrim.filt.derep.itsonly.mc2.repset.nochimeras.OTUTable.rdpggtax.biom -o seqs.prtrim.filt.derep.itsonly.mc2.repset.nochimeras.OTUTable.rdpggtax.txt --to-tsv --header-key taxonomy
-
-#### 19) Continue with your preferred post-processing and analysis.####
+#### 1) Continue with your preferred post-processing and analysis.####
 - Optional: Remove non-fungal sequences from OTU Table:
     - [filter_taxa_from_otu_table.py](http://qiime.org/scripts/filter_taxa_from_otu_table.html) -p k\__Fungi ...
+
+
 
