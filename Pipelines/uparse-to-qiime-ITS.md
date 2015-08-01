@@ -54,7 +54,7 @@ Follow the global trimming and padding of [variable-length genes](http://www.dri
 
 seqs.prtrim.itsonly.padded.filt.fasta  and  seqs.prtrim.itsonly.padded.filt.fastq
 
-*Due to how usearch (v7) clusters OTUs, sequences must be trimmed or padded at the 3'-end with terminal Ns up to your preferred sequence length. See the above link for more detail. Note the linked procedure expects you to modify / pad Ns to the FASTQ files prior to runinng steps 5 & 6 below. So, to reiterate my prior comment, if using dereplicated data they should be in FASTQ format.*
+*Due to how usearch (v7) clusters OTUs, sequences must be trimmed or padded at the 3'-end with terminal Ns up to your preferred sequence length. See the above link for more detail. Note the linked procedure expects you to modify / pad Ns to the FASTQ files prior to runinng steps 5 & 6 below.*
 
 #### 6) Dereplicate reads and sort by read count. ####
 usearch7 -derep_fulllength seqs.prtrim.itsonly.padded.filt.fasta -output seqs.prtrim.itsonly.padded.filt.derep.fasta -sizeout 
