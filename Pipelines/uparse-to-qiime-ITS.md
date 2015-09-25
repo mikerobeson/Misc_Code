@@ -37,7 +37,7 @@ Look into:
 
     [python parallel_itsx.py](https://gist.github.com/mikerobeson/e9b3e2ab05cb3b7a797a) -i seqs.filt.derep.fastq -o ITSx.output 24 24000
 
-    cat <all ITS2.fasta ouput> > seqs.itsonly.fastq
+    $ cat 'all-your-ITS2-fasta-ouput' > seqs.itsonly.fastq
 
 
 *Some colleagues of mine have warned me of potential over-clustering of different fungal taxa when not trimming the conserved rRNA ends of the resulting ITS data. I typically use [ITSx](http://microbiology.se/software/itsx/) when I do have the full ITS gene from merged paired-ends. Though you can fiddle with using this tool on only the forward reads. Mileage may vary. Keep in mind the comments of [Nguyen et al.](http://doi.org/10.1111/nph.12923) about losing taxonomic groups due to failed merges when using paired-end data. You can speed this step up further by processing dereplicated data. If you do this, you need to use a tool that can output dereplicated FASTQ files (usearch v7 does not output dereplicated FASTQ, only FASTA), as the procedure in Step 5 requires operations on FASTQ files.*
