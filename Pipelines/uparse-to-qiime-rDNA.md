@@ -56,7 +56,7 @@ python fasta_number.py seqs.filt.derep.mc2.repset.nochimeras.fasta OTU_ > seqs.f
 *This and other UPARSE python scripts can be obtained from [here](http://drive5.com/python/).*
 
 #### 11) Map the original quality filtered reads back to relabeled OTUs we just made####
-usearch7 -usearch_global seqs.prtrim.filt.fasta -db seqs.filt.derep.mc2.repset.nochimeras.OTUs.fasta -strand plus -id 0.97 -uc otu.map.uc -threads 24
+usearch7 -usearch_global seqs.filt.fasta -db seqs.filt.derep.mc2.repset.nochimeras.OTUs.fasta -strand plus -id 0.97 -uc otu.map.uc -threads 24
 
 #### 12) Make tab-delim OTU table ####
 python uc2otutab_mod.py otu.map.uc > seqs.filt.derep.mc2.repset.nochimeras.OTUTable.txt
@@ -71,7 +71,7 @@ python uc2otutab_mod.py otu.map.uc > seqs.filt.derep.mc2.repset.nochimeras.OTUTa
 "ENDO.O.2.KLNG.20.1_19 MISEQ03:119:000000000-A3N4Y:1:2101:28299:16762 1:N:0:GGTATGACTCA orig_bc=GGTATGACTCA new_bc=GGTATGACTCA bc_diffs=0" and all I need is the SampleID: "ENDO.O.2.KLNG.20.1". So I split on the underscore in `ENDO.O.2.KLNG.20.1_19`. Again, see [this](https://groups.google.com/d/msg/qiime-forum/zqmvpnZe26g/ksFmMwDHPi8J) post.*
 
 #### 13) Convert to biom format. ####
-[biom convert](http://biom-format.org/documentation/biom_conversion.html) --table-type="OTU table" --to-json -i seqs.filt.derep.mc2.repset.nochimeras.OTUTable.txt -o seqs.prtrim.filt.derep.mc2.repset.nochimeras.OTUTable.biom
+[biom convert](http://biom-format.org/documentation/biom_conversion.html) --table-type="OTU table" --to-json -i seqs.filt.derep.mc2.repset.nochimeras.OTUTable.txt -o seqs.filt.derep.mc2.repset.nochimeras.OTUTable.biom
 
 #### 14) Assign taxonomy. ####
 [parallel_assign_taxonomy_rdp.py](http://qiime.org/scripts/parallel_assign_taxonomy_rdp.html) -v --rdp_max_memory 3000 -O 4 -t greengenes.otus.97.tax -r greengenes.otus.97 -i seqs.filt.derep.mc2.repset.nochimeras.OTUs.fasta -o rdp_gg97_assigned_taxonomy
