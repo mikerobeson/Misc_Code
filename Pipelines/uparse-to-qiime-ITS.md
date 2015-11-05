@@ -67,7 +67,7 @@ Lets pretend we did this and we end up with the following file:`seqs.filt.itsonl
 
 *We must do this to obtain proper chimera detection and taxonomy assignment against reference databases. That is, they will not have those artificial Ns we added.*
 
-#### 11) Perform reference-based chimera checking against UNITE database. Using non-padded sequences from Step 9. ####
+#### 11) Perform reference-based chimera checking against UNITE database. Using non-padded sequences from Step 10. ####
 usearch7 -uchime_ref seqs.filt.itsonly.derep.mc2.repset.notpadded.fasta -db ITSx.ref.db.otus -strand plus -minh 0.5 -nonchimeras seqs.filt.itsonly.derep.mc2.repset.notpadded.nochimeras.fasta -chimeras seqs.filt.itsonly.derep.mc2.repset.notpadded.chimeras.fasta -uchimealns seqs.filt.itsonly.derep.mc2.repset.notpadded.chimeraalns.txt -threads 24
 
 *Note: Use the [UNITE](https://unite.ut.ee/repository.php) database for reference chimera detection and taxonomy aassignment for ITS. Also, make sure you check the `-uchimealns` output file. I've often had to adjust the `-minh` setting to something between 0.5 adn 1.5 as the default value of 0.28 can be to aggressive. In fact I've lost dominant OTUs in my data set becuase of this. In short, pick the appropriate reference database and cuttoff values appropriate for your data!*
