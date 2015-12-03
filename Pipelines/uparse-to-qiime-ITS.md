@@ -11,7 +11,7 @@ Look into:
     
 
 #### 1) OPTIONAL: trim primers ####
-[cutadapt](https://github.com/marcelm/cutadapt) -g GTGCCAGCMGCCGCGGTAA -G GGACTACHVGGGTWTCTAAT -e 0.1 --discard-untrimmed --match-read-wildcards -o fw.reads.trimmed.fastq -p rev.reads.trimmed.fastq fw.reads.fastq rev.reads.fastq
+[cutadapt](https://github.com/marcelm/cutadapt) -g GAACGCAGCRAANNGYGA -G TCCTCCGCTTATTGATATGC -e 0.1 --discard-untrimmed --match-read-wildcards -o fw.reads.trimmed.fastq -p rev.reads.trimmed.fastq fw.reads.fastq rev.reads.fastq
 
 *There are many primer trimming tools out there, but I think `cutadapt` is ideal. Notice, I use the detection of primers as a form of quality control. That is, I discard any sequence in which I cannot detect both the forward and reverse primers. However, if you are using [ITSx](http://microbiology.se/software/itsx/) you are probably better off leaving the primer sequences within the read for better ITS extraction.*
 
