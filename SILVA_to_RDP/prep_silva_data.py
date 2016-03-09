@@ -18,29 +18,17 @@ def parse_seq(seq):
     dna_seq = seq.translate(trans_table,' ')
     return dna_seq
 
-def make_lists(seq_data):
-    tax_list = []
-    seq_list = []
-    for label,seq in seq_data.items():
+def process_silva(seqs, tax_out, seq_out):
+    for label,seq in seqs.items():
         new_header,taxonomy = parse_label(label)
         fixed_seq = parse_seq(seq)
-        tax_list.append(new_header + '\t' + taxonomy)
-        seq_list.append('>' + new_header + '\n' + fixed_seq)
-    return tax_list, seq_list
+        tax_out.write(new_header + '\t' + taxonomy + '\n')
+        seq_out.write('>' + new_header + '\n' + fixed_seq + '\n')
 
-def make_string(data_list):
-    return '\n'.join(data_list)
-
-def main(seq_data,tax_out,seq_out):
-    tax_list,seq_list = make_lists(seq_data)
-    tax_string = make_string(tax_list)
-    seq_string = make_string(seq_list)
-    tof = open(tax_out,'w')
-    tof.write(tax_string)
-    tof.close()
-    sof = open(seq_out,'w')
-    sof.write(seq_string)
-    sof.close()
+def main(seqs,tax_out,seq_out):
+    process_silva(seqs, tax_out, seq_out)
+    tax_out.close()
+    seq_out.close()
 
 if __name__ == '__main__':
     from sys import argv
@@ -49,8 +37,8 @@ if __name__ == '__main__':
     if len(argv) != 4:
         print USE
     else:
-        infile_path = LoadSeqs(argv[1],aligned=False)
-        tax_out_path = argv[2]
-        seq_out_path = argv[3]
-        main(infile_path, tax_out_path, seq_out_path)
+        seqs = LoadSeqs(argv[1],aligned=False)
+        tax_out = open(argv[2], 'w')
+        seq_out = open(argv[3], 'w')
+        main(seqs, tax_out, seq_out)
     
