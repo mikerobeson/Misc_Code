@@ -5,7 +5,7 @@
 # into two files: 1) fasta file with accession header and 2) a
 # taxonomy file in the form of 'accession \t taxonomy'
 
-from cogent import LoadSeqs
+from cogent.parse.fasta import MinimalFastaParser 
 from string import maketrans
 
 def parse_label(label):
@@ -19,7 +19,7 @@ def parse_seq(seq):
     return dna_seq
 
 def process_silva(seqs, tax_out, seq_out):
-    for label,seq in seqs.items():
+    for label,seq in MinimalFastaParser(seqs):
         new_header,taxonomy = parse_label(label)
         fixed_seq = parse_seq(seq)
         tax_out.write(new_header + '\t' + taxonomy + '\n')
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     if len(argv) != 4:
         print USE
     else:
-        seqs = LoadSeqs(argv[1],aligned=False)
+        seqs = open(argv[1])
         tax_out = open(argv[2], 'w')
         seq_out = open(argv[3], 'w')
         main(seqs, tax_out, seq_out)
