@@ -13,7 +13,7 @@ Look into:
 #### 1) OPTIONAL: trim primers ####
 [cutadapt](https://github.com/marcelm/cutadapt) -g GAACGCAGCRAANNGYGA -G TCCTCCGCTTATTGATATGC -e 0.1 --discard-untrimmed --match-read-wildcards -o fw.reads.trimmed.fastq -p rev.reads.trimmed.fastq fw.reads.fastq rev.reads.fastq
 
-*There are many primer trimming tools out there, but I think `cutadapt` is ideal. Notice, I use the detection of primers as a form of quality control. That is, I discard any sequence in which I cannot detect both the forward and reverse primers. However, if you are using [ITSx](http://microbiology.se/software/itsx/) you are probably better off leaving the primer sequences within the read for better ITS extraction.*
+*There are many primer trimming tools out there, but I think `cutadapt` is ideal. Notice, I use the detection of primers as a form of quality control. That is, I [discard any sequence pair](https://cutadapt.readthedocs.io/en/stable/guide.html#filtering-paired-end-reads) in which I cannot detect both the forward and reverse primers. However, if you are using [ITSx](http://microbiology.se/software/itsx/) you are probably better off leaving the primer sequences within the read for better ITS extraction.*
 
 #### 2)  OPTIONAL: Merge paired ends. Skip if you just want to use the forward reads. ####
 [join_paired_ends.py](http://qiime.org/scripts/join_paired_ends.html) -m fastq-join -b index.fastq -f fw.reads.trimmed.fastq -r rev.reads.trimmed.fastq -o merged_output/
@@ -97,7 +97,7 @@ python uc2otutab_mod.py otu.map.uc > seqs.filt.derep.itsonly.mc2.repset.notpadde
        return SampleID 
 
 *I did this because my demultiplexed headers in the otu.map.uc looked like this:
-"ENDO.O.2.KLNG.20.1_19 MISEQ03:119:000000000-A3N4Y:1:2101:28299:16762 1:N:0:GGTATGACTCA orig_bc=GGTATGACTCA new_bc=GGTATGACTCA bc_diffs=0" and all I need is the SampleID: "ENDO.O.2.KLNG.20.1". So I split on the underscore in `ENDO.O.2.KLNG.20.1_19`. Again, see [this](https://groups.google.com/d/msg/qiime-forum/zqmvpnZe26g/ksFmMwDHPi8J) post.*
+"ENDO.O.2.KLNG.20.1_19 MISEQ03:119:000000000-A3N4Y:1:2101:28299:16762 1:N:0:GGTATGACTCA orig_bc=GGTATGACTCA new_bc=GGTATGACTCA bc_diffs=0" and all I need is the SampleID: "ENDO.O.2.KLNG.20.1". So I split on the underscore in `ENDO.O.2.KLNG.20.1_19`. Again, see [this](https://groups.google.com/d/msg/qiime-forum/zqmvpnZe26g/ksFmMwDHPi8J) post. WARNING: This is just a quick hack to run using default settings. If you wish to perform deeper or exhaustive searches then I suggest you format your data using [this](https://github.com/leffj/helper-code-for-uparse) great code from Jon. I also suggest you read [this](http://microbiome.mit.edu/2016/02/07/usearch/) post on why usearch does not work the way you think it does.**
 
 #### 16) Convert to biom format. ####
 [biom convert](http://biom-format.org/documentation/biom_conversion.html) --table-type="OTU table" --to-json -i seqs.filt.derep.itsonly.mc2.repset.notpadded.nochimeras.OTUTable.txt -o seqs.filt.derep.itsonly.mc2.repset.notpadded.nochimeras.OTUTable.biom

@@ -68,7 +68,7 @@ python uc2otutab_mod.py otu.map.uc > seqs.filt.derep.mc2.repset.nochimeras.OTUTa
        return SampleID 
 
 *I did this because my demultiplexed headers in the otu.map.uc looked like this:
-"ENDO.O.2.KLNG.20.1_19 MISEQ03:119:000000000-A3N4Y:1:2101:28299:16762 1:N:0:GGTATGACTCA orig_bc=GGTATGACTCA new_bc=GGTATGACTCA bc_diffs=0" and all I need is the SampleID: "ENDO.O.2.KLNG.20.1". So I split on the underscore in `ENDO.O.2.KLNG.20.1_19`. Again, see [this](https://groups.google.com/d/msg/qiime-forum/zqmvpnZe26g/ksFmMwDHPi8J) post.*
+"ENDO.O.2.KLNG.20.1_19 MISEQ03:119:000000000-A3N4Y:1:2101:28299:16762 1:N:0:GGTATGACTCA orig_bc=GGTATGACTCA new_bc=GGTATGACTCA bc_diffs=0" and all I need is the SampleID: "ENDO.O.2.KLNG.20.1". So I split on the underscore in `ENDO.O.2.KLNG.20.1_19`. Again, see [this](https://groups.google.com/d/msg/qiime-forum/zqmvpnZe26g/ksFmMwDHPi8J) post. WARNING: This is just a quick hack to run using default settings. If you wish to perform deeper or exhaustive searches then I suggest you format your data using [this](https://github.com/leffj/helper-code-for-uparse) great code from Jon. I also suggest you read [this](http://microbiome.mit.edu/2016/02/07/usearch/) post on why usearch does not work the way you think it does.*
 
 #### 13) Convert to biom format. ####
 [biom convert](http://biom-format.org/documentation/biom_conversion.html) --table-type="OTU table" --to-json -i seqs.filt.derep.mc2.repset.nochimeras.OTUTable.txt -o seqs.filt.derep.mc2.repset.nochimeras.OTUTable.biom
