@@ -13,7 +13,7 @@ Look into:
 #### 1) OPTIONAL: trim primers ####
 [cutadapt](https://github.com/marcelm/cutadapt) -g GTGCCAGCMGCCGCGGTAA -G GGACTACHVGGGTWTCTAAT -e 0.1 --discard-untrimmed --match-read-wildcards -o fw.reads.trimmed.fastq -p rev.reads.trimmed.fastq fw.reads.fastq rev.reads.fastq
 
-*There are many primer trimming tools out there, but I think `cutadapt` is ideal. Notice, I use the detection of primers as a form of quality control. That is, I discard any sequence in which I cannot detect both the forward and reverse primers.*
+*There are many primer trimming tools out there, but I think `cutadapt` is ideal. Notice, I use the detection of primers as a form of quality control. That is, I [discard any sequence pair](https://cutadapt.readthedocs.io/en/stable/guide.html#filtering-paired-end-reads) in which I cannot detect both the forward and reverse primers.*
 
 #### 2) Merge paired ends. ####
 [join_paired_ends.py](http://qiime.org/scripts/join_paired_ends.html) -m fastq-join -b index.fastq -f fw.reads.trimmed.fastq -r rev.reads.trimmed.fastq -o merged_output/
