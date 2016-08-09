@@ -11,7 +11,7 @@ Look into:
     
 
 #### 1) OPTIONAL: trim primers ####
-[cutadapt](https://github.com/marcelm/cutadapt) -g GTGCCAGCMGCCGCGGTAA -G GGACTACHVGGGTWTCTAAT -e 0.1 --discard-untrimmed --match-read-wildcards -o fw.reads.trimmed.fastq -p rev.reads.trimmed.fastq fw.reads.fastq rev.reads.fastq
+[cutadapt](https://github.com/marcelm/cutadapt) -g GTGCCAGCMGCCGCGGTAA -G GGACTACHVGGGTWTCTAAT -n 2 -e 0.1 -m 100 --discard-untrimmed --match-read-wildcards -o fw.reads.trimmed.fastq -p rev.reads.trimmed.fastq fw.reads.fastq rev.reads.fastq
 
 *There are many primer trimming tools out there, but I think `cutadapt` is ideal. Notice, I use the detection of primers as a form of quality control. That is, I [discard any sequence pair](https://cutadapt.readthedocs.io/en/stable/guide.html#filtering-paired-end-reads) in which I cannot detect both the forward and reverse primers.*
 
