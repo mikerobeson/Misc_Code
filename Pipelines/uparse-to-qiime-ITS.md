@@ -57,7 +57,7 @@ usearch7 -derep_fulllength seqs.filt.fasta -output seqs.filt.derep.fasta -sizeou
 #### 8) Remove singletons ####
 usearch7 -sortbysize seqs.filt.derep.itsonly.fasta -output seqs.filt.derep.itsonly.mc2.fasta -minsize 2
 
-#### 9) Pick OTUs, perform *de novo* chimera checking. Optionally pad your sequences with Ns prios to OTU clustering.####
+#### 9) Pick OTUs, perform *de novo* chimera checking. Optionally pad your sequences with Ns prios to OTU clustering. ####
 usearch7 -cluster_otus seqs.filt.derep.itsonly.mc2.fasta -otus seqs.filt.derep.itsonly.mc2.repset.fasta
 
 *Note: despite what is said in [this](http://onlinelibrary.wiley.com/doi/10.1111/1462-2920.12610/abstract;jsessionid=2CD2390EEFFF1D570F2B94CAC3638AA7.f04t04) paper, it has always been possible to disable de novo chimera checking. All you need to do is add the flag `-uparse_break -999` to the above command. This effectively sets up the case for which "... chimeric models would never be optimal" See my initial post about this [here](https://groups.google.com/d/msg/qiime-forum/zqmvpnZe26g/V7hUUskPrqgJ).*
