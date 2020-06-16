@@ -4,7 +4,7 @@ SILVA_to_RDP
 Python code to parse SILVA fasta database files into usable form for the RDP classifier.
 
 **Note:** *This code has been superceeded by [make_SILVA_db](https://github.com/mikerobeson/make_SILVA_db).
-Please use that code instead and consider this, obsolete. I am leaving this here for 
+Please use that code instead, and consider this obsolete. I am leaving this here for 
 historical/reference purposes.*
 
 
